@@ -73,11 +73,11 @@ set_event_from_sock(struct sk_type *event, struct sock *sk)
 static inline __attribute__((unused)) void
 set_event_from_sockaddr(struct sk_type *event, const struct sockaddr *addr)
 {
-    event->mark = 10;
-    event->priority = 10;
-    event->type = 10;
-    event->state = 10;
-    event->tuple.protocol = 10;
+    event->mark = 0;
+    event->priority = 0;
+    event->type = 0;
+    event->state = 0;
+    event->tuple.protocol = 0;
 	probe_read(&event->tuple.family, sizeof(event->tuple.family),
 		   _(&addr->sa_family));
 	// Assuming addr is of type struct sockaddr_in or struct sockaddr_in6
@@ -106,7 +106,7 @@ set_event_from_sockaddr(struct sk_type *event, const struct sockaddr *addr)
 		event->tuple.dport = 0; // dport is not available in sockaddr_in6
 	} else {
 		// Unsupported address family
-		event->tuple.family = AF_UNSPEC;
+		//event->tuple.family = AF_UNSPEC;
 		event->tuple.saddr[0] = 0;
 		event->tuple.saddr[1] = 0;
 		event->tuple.daddr[0] = 0;
