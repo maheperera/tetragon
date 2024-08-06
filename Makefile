@@ -292,7 +292,7 @@ lint:
 
 .PHONY: image image-operator image-test
 image:
-	$(CONTAINER_ENGINE) build -t "cilium/tetragon:${DOCKER_IMAGE_TAG}" --target release --build-arg TETRAGON_VERSION=$(VERSION) --platform=linux/${TARGET_ARCH} .
+	$(CONTAINER_ENGINE) build -t "cilium/tetragon:${DOCKER_IMAGE_TAG}" --build-arg TETRAGON_VERSION=$(VERSION) --platform=linux/${TARGET_ARCH} .
 	$(QUIET)@echo "Push like this when ready:"
 	$(QUIET)@echo "${CONTAINER_ENGINE} push cilium/tetragon:$(DOCKER_IMAGE_TAG)"
 
