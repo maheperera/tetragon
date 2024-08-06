@@ -92,7 +92,7 @@ set_event_from_sockaddr(struct sk_type *event, const struct sockaddr *addr)
 		const struct sockaddr_in6 *addr_in6 = (const struct sockaddr_in6 *)addr;
 
 		//event->tuple.family = AF_INET6;
-        probe_read(&event->tuple.saddr, IPV6LEN, _(&addr_in6->sin6_addr.s6_addr));
+        probe_read(&event->tuple.saddr, IPV6LEN, _(&addr_in6->sin6_addr.in6_u));
 		//memcpy(event->tuple.saddr, addr_in6->sin6_addr.s6_addr, IPV6LEN);
 		event->tuple.daddr[0] = 0;
 		event->tuple.daddr[1] = 0;

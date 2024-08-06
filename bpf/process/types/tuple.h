@@ -4,8 +4,9 @@
 #ifndef __TUPLE_H__
 #define __TUPLE_H__
 
-#define AF_INET	 2
-#define AF_INET6 10
+#define AF_UNSPEC   0
+#define AF_INET	    2
+#define AF_INET6    10
 
 #define IPV4LEN 4
 #define IPV6LEN 16
