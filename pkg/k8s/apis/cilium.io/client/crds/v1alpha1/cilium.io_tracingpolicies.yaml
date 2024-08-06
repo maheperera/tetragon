@@ -407,6 +407,10 @@ spec:
                                   - NotPrefix
                                   - Postfix
                                   - NotPostfix
+                                  - PrefixHex
+                                  - NotPrefixHex
+                                  - PostfixHex
+                                  - NotPostfixHex
                                   - GreaterThan
                                   - LessThan
                                   - GT
@@ -719,6 +723,10 @@ spec:
                                   - NotPrefix
                                   - Postfix
                                   - NotPostfix
+                                  - PrefixHex
+                                  - NotPrefixHex
+                                  - PostfixHex
+                                  - NotPostfixHex
                                   - GreaterThan
                                   - LessThan
                                   - GT
@@ -1078,6 +1086,10 @@ spec:
                                   - NotPrefix
                                   - Postfix
                                   - NotPostfix
+                                  - PrefixHex
+                                  - NotPrefixHex
+                                  - PostfixHex
+                                  - NotPostfixHex
                                   - GreaterThan
                                   - LessThan
                                   - GT
@@ -1390,6 +1402,10 @@ spec:
                                   - NotPrefix
                                   - Postfix
                                   - NotPostfix
+                                  - PrefixHex
+                                  - NotPrefixHex
+                                  - PostfixHex
+                                  - NotPostfixHex
                                   - GreaterThan
                                   - LessThan
                                   - GT
@@ -1650,6 +1666,10 @@ spec:
                                   - NotPrefix
                                   - Postfix
                                   - NotPostfix
+                                  - PrefixHex
+                                  - NotPrefixHex
+                                  - PostfixHex
+                                  - NotPostfixHex
                                   - GreaterThan
                                   - LessThan
                                   - GT
@@ -1962,6 +1982,10 @@ spec:
                                   - NotPrefix
                                   - Postfix
                                   - NotPostfix
+                                  - PrefixHex
+                                  - NotPrefixHex
+                                  - PostfixHex
+                                  - NotPostfixHex
                                   - GreaterThan
                                   - LessThan
                                   - GT

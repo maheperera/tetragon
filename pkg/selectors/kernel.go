@@ -5,6 +5,7 @@ package selectors
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 	"net"
 	"strconv"
@@ -238,13 +239,13 @@ func SelectorOp(op string) (uint32, error) {
 		return SelectorOpIn, nil
 	case "NotIn":
 		return SelectorOpNotIn, nil
-	case "prefix", "Prefix":
+	case "prefix", "Prefix", "prefixhex", "PrefixHex":
 		return SelectorOpPrefix, nil
-	case "notprefix", "NotPrefix":
+	case "notprefix", "NotPrefix", "notprefixhex", "NotPrefixHex":
 		return SelectorOpNotPrefix, nil
-	case "postfix", "Postfix":
+	case "postfix", "Postfix", "postfixhex", "PostfixHex":
 		return SelectorOpPostfix, nil
-	case "notpostfix", "NotPostfix":
+	case "notpostfix", "NotPostfix", "notpostfixhex", "NotPostfixHex":
 		return SelectorOpNotPostfix, nil
 	case "InMap":
 		return SelectorInMap, nil
@@ -702,7 +703,16 @@ func writePrefixBinaries(k *KernelSelectorState, values []string) (uint32, error
 	return writePrefix(k, values, "MatchBinaries")
 }
 
-func writePrefixStrings(k *KernelSelectorState, values []string) error {
+func writePrefixStrings(k *KernelSelectorState, values []string, hexValues bool) error {
+	if hexValues {
+		for i, v := range values {
+			b, err := hex.DecodeString(v)
+			if err != nil {
+				return fmt.Errorf("error decoding PrefixHex value %s: %s", v, err)
+			}
+			values[i] = string(b)
+		}
+	}
 	mid, err := writePrefix(k, values, "MatchArgs")
 	if err != nil {
 		return err
@@ -711,9 +721,16 @@ func writePrefixStrings(k *KernelSelectorState, values []string) error {
 	return nil
 }
 
-func writePostfixStrings(k *KernelSelectorState, values []string, ty uint32) error {
+func writePostfixStrings(k *KernelSelectorState, values []string, ty uint32, hexValues bool) error {
 	mid, m := k.newStringPostfixMap()
 	for _, v := range values {
+		if hexValues {
+			b, err := hex.DecodeString(v)
+			if err != nil {
+				return fmt.Errorf("error decoding PostfixHex value %s: %s", v, err)
+			}
+			v = string(b)
+		}
 		var value []byte
 		var size uint32
 		if ty == gt.GenericCharBuffer {
@@ -786,12 +803,12 @@ func ParseMatchArg(k *KernelSelectorState, arg *v1alpha1.ArgSelector, sig []v1al
 			}
 		}
 	case SelectorOpPrefix, SelectorOpNotPrefix:
-		err := writePrefixStrings(k, arg.Values)
+		err := writePrefixStrings(k, arg.Values, strings.HasSuffix(strings.ToLower(arg.Operator), "hex"))
 		if err != nil {
 			return fmt.Errorf("writePrefixStrings error: %w", err)
 		}
 	case SelectorOpPostfix, SelectorOpNotPostfix:
-		err := writePostfixStrings(k, arg.Values, ty)
+		err := writePostfixStrings(k, arg.Values, ty, strings.HasSuffix(strings.ToLower(arg.Operator), "hex"))
 		if err != nil {
 			return fmt.Errorf("writePostfixStrings error: %w", err)
 		}
