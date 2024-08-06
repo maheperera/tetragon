@@ -35,6 +35,7 @@ enum {
 	string_type = 6,
 	sock_type = 7,
 	cred_type = 8,
+	sockaddr_type = 9,
 
 	s64_ty = 10,
 	u64_ty = 11,
@@ -534,6 +535,18 @@ static inline __attribute__((always_inline)) long copy_sock(char *args,
 
 	return sizeof(struct sk_type);
 }
+
+static inline __attribute__((always_inline)) long copy_sockaddr(char *args,
+							    unsigned long arg)
+{
+	struct sockaddr *addr = (struct sockaddr *)arg;
+	struct sk_type *sk_event = (struct sk_type *)args;
+
+	set_event_from_sockaddr(sk_event, addr);
+
+	return sizeof(struct sk_type);
+}
+
 
 static inline __attribute__((always_inline)) long
 copy_user_ns(char *args, unsigned long arg)
@@ -1599,6 +1612,7 @@ static inline __attribute__((always_inline)) size_t type_to_min_size(int type,
 	case skb_type:
 		return sizeof(struct skb_type);
 	case sock_type:
+	case sockaddr_type:
 		return sizeof(struct sk_type);
 	case cred_type:
 		return sizeof(struct msg_cred);
@@ -1844,6 +1858,7 @@ selector_arg_offset(__u8 *f, struct msg_generic_kprobe *e, __u32 selidx,
 		case sock_type:
 			pass &= filter_inet(filter, args);
 			break;
+        // TODO sockaddr_type
 		default:
 			break;
 		}
@@ -2652,6 +2667,9 @@ read_call_arg(void *ctx, struct msg_generic_kprobe *e, int index, int type,
 		size = copy_sock(args, arg);
 		// Look up socket in our sock->pid_tgid map
 		update_pid_tid_from_sock(e, arg);
+		break;
+	case sockaddr_type:
+		size = copy_sockaddr(args, arg);
 		break;
 	case cred_type:
 		size = copy_cred(args, arg);

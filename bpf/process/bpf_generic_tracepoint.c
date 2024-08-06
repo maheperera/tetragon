@@ -128,6 +128,13 @@ static inline __attribute__((always_inline)) unsigned long get_ctx_ul(void *src,
 		return (unsigned long)sk;
 	}
 
+	case sockaddr_type: {
+		struct sockaddr *addr;
+
+		probe_read(&addr, sizeof(struct sockaddr *), src);
+		return (unsigned long)addr;
+	}
+
 	default:
 	case nop_ty:
 		return 0;
