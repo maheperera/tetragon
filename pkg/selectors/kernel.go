@@ -640,7 +640,7 @@ func writeMatchValues(k *KernelSelectorState, values []string, ty, op uint32) er
 				return fmt.Errorf("MatchArgs value %s invalid: %w", v, err)
 			}
 			WriteSelectorUint64(&k.data, uint64(i))
-		case gt.GenericSockType, gt.GenericSkbType, gt.GenericNetDev:
+		case gt.GenericSockType, gt.GenericSkbType, gt.GenericNetDev, gt.GenericSockAddrType:
 			return fmt.Errorf("MatchArgs type sock, skb and net_device do not support operator %s", selectorOpStringTable[op])
 		case gt.GenericCharIovec:
 			return fmt.Errorf("MatchArgs values %s unsupported", v)
@@ -813,6 +813,7 @@ func ParseMatchArg(k *KernelSelectorState, arg *v1alpha1.ArgSelector, sig []v1al
 			return fmt.Errorf("writePostfixStrings error: %w", err)
 		}
 	case SelectorOpSport, SelectorOpDport, SelectorOpNotSport, SelectorOpNotDport, SelectorOpProtocol, SelectorOpFamily, SelectorOpState:
+		// TODO support these filters for sockaddr?
 		if ty != gt.GenericSockType && ty != gt.GenericSkbType {
 			return fmt.Errorf("sock/skb operators specified for non-sock/skb type")
 		}
@@ -821,6 +822,7 @@ func ParseMatchArg(k *KernelSelectorState, arg *v1alpha1.ArgSelector, sig []v1al
 			return fmt.Errorf("writeMatchRangesInMap error: %w", err)
 		}
 	case SelectorOpSaddr, SelectorOpDaddr, SelectorOpNotSaddr, SelectorOpNotDaddr:
+		// TODO support these filters for sockaddr?
 		if ty != gt.GenericSockType && ty != gt.GenericSkbType {
 			return fmt.Errorf("sock/skb operators specified for non-sock/skb type")
 		}
@@ -829,6 +831,7 @@ func ParseMatchArg(k *KernelSelectorState, arg *v1alpha1.ArgSelector, sig []v1al
 			return fmt.Errorf("writeMatchAddrsInMap error: %w", err)
 		}
 	case SelectorOpSportPriv, SelectorOpDportPriv, SelectorOpNotSportPriv, SelectorOpNotDportPriv:
+		// TODO support these filters for sockaddr?
 		// These selectors do not take any values, but we do check that they are only used for sock/skb.
 		if ty != gt.GenericSockType && ty != gt.GenericSkbType {
 			return fmt.Errorf("sock/skb operators specified for non-sock/skb type")

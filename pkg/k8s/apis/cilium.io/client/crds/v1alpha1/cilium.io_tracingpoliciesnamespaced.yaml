@@ -166,6 +166,7 @@ spec:
                             - size_t
                             - skb
                             - sock
+                            - sockaddr
                             - string
                             - fd
                             - file
@@ -264,6 +265,7 @@ spec:
                           - size_t
                           - skb
                           - sock
+                          - sockaddr
                           - string
                           - fd
                           - file
@@ -938,6 +940,7 @@ spec:
                             - size_t
                             - skb
                             - sock
+                            - sockaddr
                             - string
                             - fd
                             - file
@@ -1518,6 +1521,7 @@ spec:
                             - size_t
                             - skb
                             - sock
+                            - sockaddr
                             - string
                             - fd
                             - file

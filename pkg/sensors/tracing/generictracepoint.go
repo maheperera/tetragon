@@ -809,6 +809,28 @@ func handleMsgGenericTracepoint(
 			arg.Sockaddr = sock.Sockaddr
 			unix.Args = append(unix.Args, arg)
 
+		case gt.GenericSockAddrType:
+			var sock api.MsgGenericKprobeSock
+			var arg api.MsgGenericKprobeArgSock
+
+			err := binary.Read(r, binary.LittleEndian, &sock)
+			if err != nil {
+				logger.GetLogger().WithError(err).Warnf("sockaddr type err")
+			}
+
+			arg.Family = sock.Tuple.Family
+			arg.State = sock.State
+			arg.Type = sock.Type
+			arg.Protocol = sock.Tuple.Protocol
+			arg.Mark = sock.Mark
+			arg.Priority = sock.Priority
+			arg.Saddr = network.GetIP(sock.Tuple.Saddr, sock.Tuple.Family).String()
+			arg.Daddr = network.GetIP(sock.Tuple.Daddr, sock.Tuple.Family).String()
+			arg.Sport = uint32(sock.Tuple.Sport)
+			arg.Dport = uint32(sock.Tuple.Dport)
+			arg.Sockaddr = sock.Sockaddr
+			unix.Args = append(unix.Args, arg)
+
 		default:
 			logger.GetLogger().Warnf("handleGenericTracepoint: ignoring:  %+v", out)
 		}

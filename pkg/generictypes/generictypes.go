@@ -6,14 +6,15 @@ package generictypes
 import "fmt"
 
 const (
-	GenericIntType    = 1
-	GenericCharBuffer = 2
-	GenericCharIovec  = 3
-	GenericSizeType   = 4
-	GenericSkbType    = 5
-	GenericStringType = 6
-	GenericSockType   = 7
-	GenericCredType   = 8
+	GenericIntType      = 1
+	GenericCharBuffer   = 2
+	GenericCharIovec    = 3
+	GenericSizeType     = 4
+	GenericSkbType      = 5
+	GenericStringType   = 6
+	GenericSockType     = 7
+	GenericCredType     = 8
+	GenericSockAddrType = 9
 
 	GenericS64Type = 10
 	GenericU64Type = 11
@@ -75,6 +76,7 @@ var GenericStringToType = map[string]int{
 	"int32":           GenericS32Type,
 	"skb":             GenericSkbType,
 	"sock":            GenericSockType,
+	"sockaddr":        GenericSockAddrType,
 	"size_t":          GenericSizeType,
 	"char_buf":        GenericCharBuffer,
 	"char_iovec":      GenericCharIovec,
@@ -119,6 +121,7 @@ var GenericTypeToStringTable = map[int]string{
 	GenericS32Type:         "int32",
 	GenericSkbType:         "skb",
 	GenericSockType:        "sock",
+	GenericSockAddrType:    "sockaddr",
 	GenericSizeType:        "size_t",
 	GenericCharBuffer:      "char_buf",
 	GenericCharIovec:       "char_iovec",
