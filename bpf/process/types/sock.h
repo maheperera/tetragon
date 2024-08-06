@@ -95,11 +95,13 @@ set_event_from_sockaddr(struct sk_type *event, const struct sockaddr *addr)
 
 		probe_read(&event->tuple.saddr, IPV4LEN, _(&addr_in->sin_addr.s_addr));
     	probe_read(&event->tuple.sport, sizeof(event->tuple.sport), _(&addr_in->sin_port));
+    	event->tuple.sport = bpf_ntohs(event->tuple.sport);
 	} else if (event->tuple.family == AF_INET6) {
 		const struct sockaddr_in6 *addr_in6 = (const struct sockaddr_in6 *)addr;
 
         probe_read(&event->tuple.saddr, IPV6LEN, _(&addr_in6->sin6_addr.in6_u));
     	probe_read(&event->tuple.sport, sizeof(event->tuple.sport), _(&addr_in6->sin6_port));
+    	event->tuple.sport = bpf_ntohs(event->tuple.sport);
 	}
 }
 #endif // __SOCK_H__
