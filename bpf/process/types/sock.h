@@ -73,46 +73,33 @@ set_event_from_sock(struct sk_type *event, struct sock *sk)
 static inline __attribute__((unused)) void
 set_event_from_sockaddr(struct sk_type *event, const struct sockaddr *addr)
 {
+    event->sockaddr = 0;
     event->mark = 0;
     event->priority = 0;
     event->type = 0;
     event->state = 0;
     event->tuple.protocol = 0;
+    event->tuple.saddr[0] = 0;
+    event->tuple.saddr[1] = 0;
+    event->tuple.daddr[0] = 0;
+    event->tuple.daddr[1] = 0;
+    event->tuple.sport = 0;
+    event->tuple.dport = 0;
+
 	probe_read(&event->tuple.family, sizeof(event->tuple.family),
 		   _(&addr->sa_family));
+
 	// Assuming addr is of type struct sockaddr_in or struct sockaddr_in6
 	if (event->tuple.family == AF_INET) {
 		const struct sockaddr_in *addr_in = (const struct sockaddr_in *)addr;
 
-		//event->tuple.family = AF_INET;
 		probe_read(&event->tuple.saddr, IPV4LEN, _(&addr_in->sin_addr.s_addr));
-		//event->tuple.saddr[0] = addr_in->sin_addr.s_addr & 0xFF;
-		//event->tuple.saddr[1] = (addr_in->sin_addr.s_addr >> 8) & 0xFF;
-		event->tuple.daddr[0] = 0;
-		event->tuple.daddr[1] = 0;
     	probe_read(&event->tuple.sport, sizeof(event->tuple.sport), _(&addr_in->sin_port));
-		//event->tuple.sport = bpf_ntohs(addr_in->sin_port);
-		event->tuple.dport = 0; // dport is not available in sockaddr_in
 	} else if (event->tuple.family == AF_INET6) {
 		const struct sockaddr_in6 *addr_in6 = (const struct sockaddr_in6 *)addr;
 
-		//event->tuple.family = AF_INET6;
         probe_read(&event->tuple.saddr, IPV6LEN, _(&addr_in6->sin6_addr.in6_u));
-		//memcpy(event->tuple.saddr, addr_in6->sin6_addr.s6_addr, IPV6LEN);
-		event->tuple.daddr[0] = 0;
-		event->tuple.daddr[1] = 0;
     	probe_read(&event->tuple.sport, sizeof(event->tuple.sport), _(&addr_in6->sin6_port));
-		//event->tuple.sport = bpf_ntohs(addr_in6->sin6_port);
-		event->tuple.dport = 0; // dport is not available in sockaddr_in6
-	} else {
-		// Unsupported address family
-		//event->tuple.family = AF_UNSPEC;
-		event->tuple.saddr[0] = 0;
-		event->tuple.saddr[1] = 0;
-		event->tuple.daddr[0] = 0;
-		event->tuple.daddr[1] = 0;
-		event->tuple.sport = 0;
-		event->tuple.dport = 0;
 	}
 }
 #endif // __SOCK_H__
